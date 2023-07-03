@@ -1,13 +1,35 @@
 #  SwiftKeychain
 
-A Keychain wrapper allowing safely interaction with Keychain using strongly typed values.
+A Keychain wrapper allowing safely interaction with Keychain using strongly typed values and even in **Swift concurrency** fashion.
 
 ## Install
 
-    .package(url: "https://github.com/ShenghaiWang/SwiftKeychain.git", from: "0.1.0")
+    .package(url: "https://github.com/ShenghaiWang/SwiftKeychain.git", from: "0.2.0")
 
 
 ## Usage
+
+```Swift
+// Add
+
+// Data
+SwiftKeychain.add(data: data, for: key)
+// Codable value
+let result = try? SwiftKeychain.add(value: value, for: key)
+
+// Search
+
+// Data
+let resultData = SwiftKeychain.search(key: key)
+// Codable value
+let resultValue: Struct = try? SwiftKeychain.search(key: key)
+
+// Delete
+let resultStatus = SwiftKeychain.delete(key: key)
+
+```
+
+The full fledged methods provide full acceess to keychain even in **Swift concurrency** fashion.
 
 ### Convenience methods
 
@@ -15,19 +37,23 @@ A Keychain wrapper allowing safely interaction with Keychain using strongly type
 
 ```swift
 @discardableResult
-public static func add(data: Data, for key: String) -> OSStatus?
+public static func add(data: Data, for key: String) -> Bool
+// And
+public static func add(value: Encodable, for key: String) throws -> Bool
 ```
 
 #### Search
 
 ```swift
 public static func search(key: String) -> Data?
+// And
+public static func search<T: Decodable>(key: String) throws -> T
 ```
 #### Delete
 
 ```swift
 @discardableResult
-public static func delete(key: String) -> OSStatus?
+public static func delete(key: String) -> Bool
 ```
 
 ### Full fledged methods

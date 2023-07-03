@@ -205,12 +205,24 @@ public class SwiftKeychain {
     }
 
     // MARK: Convenience
+
+    /// Add data to keychain
+    ///
+    /// - Parameters:
+    ///   - data: The data to be added to keychain
+    ///   - key: The key for the new keychain item
+    /// - Returns: True if the operation is successful
     @discardableResult
-    public static func add(data: Data, for key: String) -> OSStatus? {
+    public static func add(data: Data, for key: String) -> Bool {
         let item = InternetPassword(data: data, for: key)
-        return add(item: .internetPassword(item)).status
+        return add(item: .internetPassword(item)).status == errSecSuccess
     }
 
+    /// Search data from keychain
+    ///
+    /// - Parameters:
+    ///   - key: The key to be searched from keychain
+    /// - Returns: The data associated to the key
     public static func search(key: String) -> Data? {
         let item = InternetPassword(for: key)
         return search(item: .internetPassword(item),
@@ -218,10 +230,37 @@ public class SwiftKeychain {
                       results: [.data]).result as? Data
     }
 
+    /// Add data to keychain
+    ///
+    /// - Parameters:
+    ///   - value: The value to be added to keychain
+    ///   - key: The key for the new keychain item
+    /// - Returns: True if the operation is successful
     @discardableResult
-    public static func delete(key: String) -> OSStatus? {
+    public static func add(value: Encodable, for key: String) throws -> Bool {
+        let data = try JSONEncoder().encode(value)
+        return add(data: data, for: key)
+    }
+
+    /// Search data from keychain
+    ///
+    /// - Parameters:
+    ///   - key: The key to be searched from keychain
+    /// - Returns: The value associated to the key
+    public static func search<T: Decodable>(key: String) throws -> T {
+        guard let data = search(key: key) else { throw KeychainError.noDataFound(forKey: key) }
+        return try JSONDecoder().decode(T.self, from: data)
+    }
+
+    /// Delete key from keychain
+    ///
+    /// - Parameters:
+    ///   - key: The key to be searched from keychain item
+    /// - Returns: True if the operation is successful
+    @discardableResult
+    public static func delete(key: String) -> Bool {
         let item = InternetPassword(for: key)
         return delete(item: .internetPassword(item),
-                      with: [.limit(.one)]).status
+                      with: [.limit(.one)]).status == errSecSuccess
     }
 }
