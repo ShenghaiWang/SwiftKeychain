@@ -10,6 +10,9 @@ let package = Package(
             name: "SwiftKeychain",
             targets: ["SwiftKeychain"]),
     ],
+    dependencies: [
+        .package(url: "https://github.com/apple/swift-docc-plugin", from: "1.1.0"),
+    ],
     targets: [
         .target(
             name: "SwiftKeychain"),
