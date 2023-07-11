@@ -4,7 +4,7 @@ A Keychain wrapper allowing safely interaction with Keychain using strongly type
 
 ## Install
 
-    .package(url: "https://github.com/ShenghaiWang/SwiftKeychain.git", from: "0.2.0")
+    .package(url: "https://github.com/ShenghaiWang/SwiftKeychain.git", from: "1.0.0")
 
 
 ## Usage [API Doc](https://m.timwang.au/swiftkeychain/documentation/swiftkeychain/swiftkeychain)
